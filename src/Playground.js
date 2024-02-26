@@ -2,11 +2,12 @@
 import { describeArc, nextChar, checkProximity } from './utils';
 import { useEffect, useRef } from 'react';
 import segment from './assets/segment.png';
+import grid from './assets/grid.png';
 
 export default function Playground({graph}) {
   const myRef = useRef(null)
   let dropLineSegment = false;
-  let granuality = 4;
+  let granuality = 1;
 
   const rects = useRef([]);
   // const vertices = new Map();
@@ -33,12 +34,12 @@ export default function Playground({graph}) {
     svgElement.setAttribute("width", 500);
     svgElement.setAttribute("height", 500);
 
-    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("width", "100%");
-    rect.setAttribute("height", "100%");
-    rect.setAttribute("fill", "#d9d9d933");
+    // const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    // rect.setAttribute("width", "100%");
+    // rect.setAttribute("height", "100%");
+    // rect.setAttribute("fill", "#d9d9d933");
 
-    svgElement.append(rect)
+    // svgElement.append(rect)
 
     const bbox = svgElement.getBoundingClientRect()
     offsetX = bbox.left;
@@ -46,22 +47,22 @@ export default function Playground({graph}) {
 
     for (let x = 0; x < vw; x+=cw) {
       for (let y = 0; y < vh; y+=ch) {
-        const rectEle = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        rectEle.setAttribute("fill", "#828282")
+        // const rectEle = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        // rectEle.setAttribute("fill", "#828282")
         let rect = {
           x: x,
           y: y,
           width: r,
           height: r
         };
-        rectEle.setAttribute("width", r)
-        rectEle.setAttribute("height", r)
-        rectEle.setAttribute("x", x - r / 2)
-        rectEle.setAttribute("y", y - r / 2)
+        // rectEle.setAttribute("width", r)
+        // rectEle.setAttribute("height", r)
+        // rectEle.setAttribute("x", x - r / 2)
+        // rectEle.setAttribute("y", y - r / 2)
 
         rects.current.push(rect);
 
-        svgElement.append(rectEle)
+        // svgElement.append(rectEle)
       }
     }
 
@@ -84,6 +85,7 @@ export default function Playground({graph}) {
       if (dropLineSegment) return;
       let index = e.target.getAttribute("cx") + "," + e.target.getAttribute("cy");
       const group = e.target.parentElement;
+
       const onMouseMove = (event) => {
         if (!event.pageX) {
           event.pageX = event.changedTouches[0].pageX
@@ -193,27 +195,31 @@ export default function Playground({graph}) {
               group.append(label2)
             }
 
-              let vertex1 = group.querySelector("#vertex1")
+            let vertex1 = group.querySelector("#vertex1")
 
-              let vx1 = parseInt(vertex1.getAttribute("cx"))
-              let vy1 = parseInt(vertex1.getAttribute("cy"))
+            let vx1 = parseInt(vertex1.getAttribute("cx"))
+            let vy1 = parseInt(vertex1.getAttribute("cy"))
 
-              const dist = Math.round(Math.sqrt(
-                Math.pow(vx1 - cx, 2) + Math.pow(vy1 - cy, 2)
-              ) / 8)
+            const dist = Math.round(Math.sqrt(
+              Math.pow(vx1 - cx, 2) + Math.pow(vy1 - cy, 2)
+            ) / 8)
 
-              graph.addNode(currentIndex)
-              graph.addEdge(vx1 + "," + vy1, currentIndex, dist)
-              graph.removeEdge(vx1 + "," + vy1, index)
+            graph.addNode(currentIndex)
+            graph.addEdge(vx1 + "," + vy1, currentIndex, dist)
+            if (index !== currentIndex) graph.removeEdge(vx1 + "," + vy1, index)
+          } else {
+            if (!group.querySelector("#label1")) {
+              const label1 = drawLabel({
+                x: cx - cw,
+                y: cy + 3 * ch,
+                class: "label",
+                id: "label1",
+                textContent: vertexLabel
+              })
 
-          } else if (!group.querySelector("#label1")) {
-            const label1 = drawLabel({
-              x: cx - cw,
-              y: cy + 3 * ch,
-              class: "label",
-              id: "label1",
-              textContent: vertexLabel
-            })
+              vertexLabel = nextChar(vertexLabel)
+              group.append(label1)
+            }
 
             let vertex2 = group.querySelector("#vertex2")
 
@@ -225,10 +231,7 @@ export default function Playground({graph}) {
 
             graph.addNode(currentIndex)
             graph.addEdge(vx2 + "," + vy2, currentIndex, dist)
-            graph.removeEdge(vx2 + "," + vy2, index)
-
-            vertexLabel = nextChar(vertexLabel)
-            group.append(label1)
+            if (index !== currentIndex) graph.removeEdge(vx2 + "," + vy2, index)
           }
 
           // vertices.set(currentIndex, 1);
@@ -236,7 +239,7 @@ export default function Playground({graph}) {
           console.log("Merge")
           if (rightVertex) {
             let rightLabel = group.querySelector("#label2")
-            if (rightLabel)
+            if (index !== currentIndex && rightLabel)
               group.removeChild(rightLabel)
 
             let lengthLabel = group.querySelector("#length")
@@ -248,7 +251,7 @@ export default function Playground({graph}) {
               let cx1 = parseInt(line.getAttribute("x1"))
               let cy1 = parseInt(line.getAttribute("y1"))
 
-              if (graph.search(cx1 + "," + cy1) && graph.hasEdge(cx1 + "," + cy1, currentIndex)) {
+              if (index !== currentIndex && graph.hasEdge(cx1 + "," + cy1, currentIndex)) {
                 group.removeChild(lengthLabel)
               }
             }
@@ -269,11 +272,14 @@ export default function Playground({graph}) {
                 }
               }
             }
-            graph.removeNode(index)
+
+            if (currentIndex !== index) {
+              graph.removeNode(index)
+            }
 
           } else {
             let leftLabel = group.querySelector("#label1")
-            if (leftLabel)
+            if (index !== currentIndex && leftLabel)
               group.removeChild(leftLabel)
 
             let lengthLabel = group.querySelector("#length")
@@ -284,12 +290,11 @@ export default function Playground({graph}) {
               let cx2 = parseInt(line.getAttribute("x2"))
               let cy2 = parseInt(line.getAttribute("y2"))
 
-              if (graph.search(cx2 + "," + cy2) && graph.hasEdge(cx2 + "," + cy2, currentIndex)) {
+              if (index !== currentIndex && graph.hasEdge(cx2 + "," + cy2, currentIndex)) {
                 group.removeChild(lengthLabel)
               }
             }
 
-            graph.addNode(currentIndex)
 
             const graphNeighbours = graph.getNeighboors(index)
 
@@ -307,7 +312,10 @@ export default function Playground({graph}) {
                 }
               }
             }
-            graph.removeNode(index)
+
+            if (currentIndex !== index) {
+              graph.removeNode(index)
+            }
 
           }
         }
@@ -500,7 +508,7 @@ export default function Playground({graph}) {
         <img src={segment} alt='segment' />
       </span>
     </div>
-    <svg ref={myRef} onMouseDown={mouseDown} />
+    <svg ref={myRef} style={{backgroundImage: `url(${grid})`}} onMouseDown={mouseDown} />
   </>;
 
 }
