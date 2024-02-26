@@ -1,0 +1,90 @@
+
+body, .label {
+  font-family: Epilogue;
+  font-size: 14px;
+}
+
+.footer {
+  width: 500px;
+  height: 80px;
+  padding: 30px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  background-color: #FCF6D7;
+  border-radius: 16px 16px 0px 0px;
+  box-shadow: -2px -2px 16px 0px rgba(0,0,0,0.16);
+  margin-top: 20px;
+}
+
+.segment-button {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.problem-text {
+  padding: 20px;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  box-sizing: border-box;
+}
+
+.submit-button {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.question-number {
+  background-color: #FCF6D7;
+  padding: 4px 8px;
+  margin-right: 10px;
+}
+
+.list-item {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.question-number.invalid {
+  background-color: #FFD9D9;
+}
+
+.problem-text ul {
+  padding: 0;
+}
+
+.submit-button {
+  box-sizing: border-box;
+  width: 460px;
+  height: 56px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 21px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 2 2 16 0 rgba(0, 0, 0, 0.16);
+  background-color: #FFE249;
+  border-radius: 8px;
+}
+
+.error-message {
+  box-sizing: border-box;
+  width: 460px;
+  height: 40px;
+  padding: 10px;
+  background-color: #FFD9D9;
+  border-radius: 2px;
+}
