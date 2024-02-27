@@ -88,3 +88,7 @@ body, .label {
   background-color: #FFD9D9;
   border-radius: 2px;
 }
+
+.question-number.valid {
+  background-color: #D9F8D9;
+}
