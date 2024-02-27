@@ -244,9 +244,9 @@ export const mergeVertices = (rightVertex, group, index, currentIndex, graph, cx
       let y3 = parseInt(s2.split(",")[1]);
       let cellWidth = 8, cellHeight = 8;
 
-      console.log(x2, y2)
-      console.log(x3, y3)
-      console.log(currentIndex)
+      // console.log(x2, y2)
+      // console.log(x3, y3)
+      // console.log(currentIndex)
 
       let x = parseInt(currentIndex.split(",")[0])
       let y = parseInt(currentIndex.split(",")[1])
@@ -321,8 +321,8 @@ export const getD = (x2, x3, y2, y3, vertex1) => {
     slope1 += 360;
   }
 
-  console.log('slope1', slope1)
-  console.log('slope2', slope2)
+  // console.log('slope1', slope1)
+  // console.log('slope2', slope2)
 
   let degrees = Math.abs(slope1 - slope2);
 

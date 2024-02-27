@@ -183,7 +183,7 @@ export default function Playground({ graph }) {
           mergeVertices(rightVertex, group, index, currentIndex, graph, cx, cy)
         }
 
-        console.log(graph.adjacencyList);
+        // console.log(graph.adjacencyList);
         document.onmouseup = null;
         document.ontouchend = null;
         document.ontouchcancel = null;
