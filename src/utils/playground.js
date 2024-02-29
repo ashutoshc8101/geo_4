@@ -352,7 +352,7 @@ export const drawAngle = (
       y: vertex1.y - 2 * cellHeight,
       className: "label",
       id: "angleLabel",
-      textContent: Math.round(degrees)
+      textContent: Math.round(degrees) + "°"
     });
 
     return [angleLabel, path];

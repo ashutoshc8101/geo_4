@@ -108,7 +108,7 @@ export default function Playground({ graph }) {
            x2,cx, y2, cy, { x: parseInt(cx1), y: parseInt(cy1) },)
 
         path.setAttribute("d", d)
-        label.textContent = Math.round(angles)
+        label.textContent = (Math.round(angles) + "°");
       }
 
     } else {
@@ -145,7 +145,7 @@ export default function Playground({ graph }) {
            x2,cx, y2, cy, { x: parseInt(cx1), y: parseInt(cy1) },)
 
         path.setAttribute("d", d)
-        label.textContent = Math.round(angles)
+        label.textContent = Math.round(angles) + "°"
       }
     }
   };
@@ -175,11 +175,11 @@ export default function Playground({ graph }) {
 
         let currentIndex = cx + "," + cy;
         if (!graph.search(currentIndex)) {
-          console.log('Diverge');
+          // console.log('Diverge');
           seperateVertices(rightVertex, cx, cy, cellWidth, cellHeight, vertexLabel, nextChar, group, graph, currentIndex, index)
           // vertices.set(currentIndex, 1);
         } else {
-          console.log("Merge");
+          // console.log("Merge");
           mergeVertices(rightVertex, group, index, currentIndex, graph, cx, cy)
         }
 
@@ -331,7 +331,11 @@ export default function Playground({ graph }) {
     </div>
 
     <div id="playDiv">
-      <svg id="playground" ref={svgRef} style={{ backgroundImage: `url(${grid})` }} onMouseDown={drawLineSegment} />
+      <svg id="playground"
+           ref={svgRef}
+           style={{ backgroundImage: `url(${grid})` }}
+           onMouseDown={drawLineSegment}
+      />
     </div>
   </>;
 }
