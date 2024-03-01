@@ -1,5 +1,5 @@
 export function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-  var angleInRadians = (angleInDegrees) * Math.PI / 180.0;
+  let angleInRadians = (angleInDegrees) * Math.PI / 180.0;
 
   return {
     x: centerX + (radius * Math.cos(angleInRadians)),
@@ -7,23 +7,11 @@ export function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   };
 }
 
-export function describeArc(x, y, radius, startAngle, endAngle){
+export function describeArc(x, y, radius, vector1, vector2, largeArcFlag) {
+    let start = {x : x + radius * vector1[0], y : y + radius * vector1[1]}
+    let end = {x: x + radius * vector2[0], y: y + radius * vector2[1]}
 
-    var start = polarToCartesian(x, y, radius, startAngle);
-    var end = polarToCartesian(x, y, radius, endAngle);
-
-    let endAngleComp = endAngle >= 180 && endAngle <= 360 ? endAngle - 360 : endAngle;
-    let startAngleComp = startAngle >= 180 && startAngle <= 360 ? startAngle - 360 : startAngle;
-
-    if (endAngleComp - startAngleComp > 180) {
-      var temp = start;
-      start = end;
-      end = temp;
-    }
-
-    var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "0";
-
-    var d = [
+    let d = [
         "M", start.x, start.y,
         "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
     ].join(" ");
@@ -42,52 +30,46 @@ export function checkProximity(rect, x, y) {
     y <= rect.y + rect.height + 3.4);
 }
 
-export function getText(constraint) {
-  switch (constraint.name) {
-    case 'SHAPE':
-        return 'Must be ' + constraint.value.toLowerCase();
-    case 'ANGLE_SHAPE':
-        return 'Must be ' + constraint.value.toLowerCase()
-    case 'LENGTH':
-        return 'Length of one side must be ' + constraint.value + ' cm'
-    case 'ANGLE':
-        return 'Angle of one side must be ' + constraint.value + ' degrees'
-    default: return ''
-  }
-};
 
-export const dfs = (adjL, start) => {
-  const stack = [start];
-  const visited = new Set();
-  const result = [];
-  let parent = null;
+export const getNearestGridPoint = (e, offsetX, offsetY, rects) => {
+  let mouseX = parseInt(e.clientX - offsetX);
+  let mouseY = parseInt(e.clientY - offsetY);
 
-  while (stack.length) {
-    const vertex = stack.pop();
-
-    if (!visited.has(vertex)) {
-      visited.add(vertex);
-
-      for (const [key, weight] of adjL.get(vertex)) {
-        if (key !== parent && !visited.has(key)) {
-          stack.push(key);
-          result.push(weight);
-        }
-      }
-
-      parent = vertex;
+  for (let i = 0; i < rects.current.length; i++) {
+    let rect = rects.current[i];
+    if (checkProximity(rect, mouseX, mouseY)) {
+        return rect;
     }
   }
 
-  return result;
+  return;
 }
 
-export const validTriangle = (adjL) => {
-  let validTriangle = adjL.size === 3;
+export const getOffsetCoordinates = (event, svgDiv) => {
 
-  for (let [key, val] of adjL) {
-    validTriangle &= val.size === 2;
+  if (!event.pageX && event.changedTouches) {
+    event.pageX = event.changedTouches[0].pageX;
+  }
+  if (!event.pageY && event.changedTouches) {
+    event.pageY = event.changedTouches[0].pageY;
   }
 
-  return validTriangle;
+  let pageX = event.pageX - svgDiv.offsetLeft;
+  let pageY = event.pageY - svgDiv.offsetLeft;
+
+  let cx = Math.round(pageX / 8) * 8;
+  let cy = Math.round(pageY / 8) * 8;
+
+  return [cx, cy]
 }
+
+export const translateVertex = (event, e, svgDiv) => {
+  // Translates vertex with the mouse pointer while dragging.
+  let [cx, cy] = getOffsetCoordinates(event, svgDiv)
+
+  e.target.setAttribute("cx", cx);
+  e.target.setAttribute("cy", cy);
+
+  return [cx, cy]
+}
+

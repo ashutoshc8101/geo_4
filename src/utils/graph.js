@@ -1,4 +1,3 @@
-
 class Graph {
   adjacencyList;
 
@@ -13,7 +12,7 @@ class Graph {
   removeNode(node) {
     this.adjacencyList.delete(node)
 
-    // clean edges
+    // rempves incoming edges to the node after it is removed from graph.
     for (let [key, neighbours] of this.adjacencyList) {
       for (let [key2, _] of neighbours) {
         if (key2 === node) {
@@ -32,7 +31,7 @@ class Graph {
     this.adjacencyList.get(node1).delete(node2)
     this.adjacencyList.get(node2).delete(node1)
 
-    // clean stray vertices
+    // removes residual vertices without any neighbour.
     for (let [key, neighbours] of this.adjacencyList) {
       if(neighbours.size === 0) {
         this.adjacencyList.delete(key)

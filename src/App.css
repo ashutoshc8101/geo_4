@@ -1,11 +1,17 @@
 
 body, .label {
   font-family: Epilogue;
-  font-size: 14px;
+  font-size: 14px;;
+}
+
+#playground {
+  width: 100%;
+  max-width: 500px;
 }
 
 .footer {
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   height: 80px;
   padding: 30px;
   position: absolute;
